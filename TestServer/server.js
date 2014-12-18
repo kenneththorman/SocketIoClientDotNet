@@ -40,11 +40,14 @@ app.get('/', function (req, res) {
 io.on('connection', function (socket) {
   socket.emit('hi','more data');
 
-
+  socket.on('hi2', function (d) {
+      console.log("hi2" + d);
+      socket.emit('hi2back','more data');
+    });
 
     // simple test
-  socket.on('hi', function () {
-      console.log("hi");
+  socket.on('hi', function (d) {
+      console.log("hi" + d);
       socket.emit('hi','more data');
     });
 
@@ -81,6 +84,15 @@ io.on('connection', function (socket) {
     socket.on('ack', function () {
         socket.emit('ack', function (a, b) {
             console.log("emit ack b=" + JSON.stringify(b));
+            if (a === 5 && b.b === true) {
+                socket.emit('got it');
+            }
+        });
+    });
+
+    socket.on('ack2', function () {
+        socket.emit('ack2', 'hello there', function (a, b) {
+            console.log("emit ack2 b=" + JSON.stringify(b));
             if (a === 5 && b.b === true) {
                 socket.emit('got it');
             }
